@@ -1,15 +1,17 @@
-from guizero import App, PushButton
+time = int(input("Nhập số phút gọi trong tháng: "))
+while time < 0:
+    time = int(input("Nhập số phút gọi trong tháng (Không thể dưới 0): "))
 
-app_ = App(title="hello", width=400, height=250, layout="grid", bg=(0, 0, 0))
+def calculate(t):
+    total = 0
+    for i in range(t+1):
+        if 0 < i <= 100:
+            total += 1000
+        elif 100 < i <= 300:
+            total += 800
+        elif i > 300:
+            total += 600
+    return total
 
-def press_check():
-    print("Nhangay")
-
-button = PushButton(app_, text="Button Of Truth", command=press_check,grid=[1,1])
-button.bg = (255, 255, 255)
-button.text_color = (0, 0, 0)
-button.text_bold = True
-app_.tk.grid_rowconfigure(1,weight = 1)
-app_.tk.grid_columnconfigure(1,weight = 1)
-
-app_.display()
+result = calculate(time)
+print(f"Số tiền cần thanh toán: {result:,} VND")
