@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+#<<<<<<< HEAD
 from guizero import *
 
 # app = App(title="Bài cáo IT",width=500,height=500,layout="auto",bg=(255,255,255))
