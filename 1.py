@@ -40,5 +40,5 @@ def list_sum(tlist):
 d = list_sum(c)
 print(d)
 
-# e) Lọc ra các số chẵn từ danh sách đã tạo ở câu a. In kết quả ra màn hình12   QQ
+# e) Lọc ra các số chẵn từ danh sách đã tạo ở câu a. In kết quả ra màn hình12
 
