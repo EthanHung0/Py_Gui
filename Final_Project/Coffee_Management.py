@@ -1,8 +1,11 @@
+from pathlib import Path
 from guizero import *
 from PIL import Image,ImageGrab
 import datetime
 import random
 import os
+
+BASE_DIR = Path(__file__).parent
 
 Main = App(title="Hui Cafe P.O.S system",width=1000,height=600,bg="#F8F4E1")
 
@@ -27,21 +30,21 @@ def Back(): #Return to Main Menu
 
 #=============================================================================================================
 Items = { #Items
-    1:["Espresso",4.2,"Final_Project/items/espresso.png",0],
-    2:["Cappucchino",3.3,"Final_Project/items/cappucchino.png",0],
-    3:["Latte",4.0,"Final_Project/items/latte.png",0],
-    4:["Americano",4.0,"Final_Project/items/americano.png",0],
-    5:["Iced Coffee Milk",3.8,"Final_Project/items/icedcoffeemilk.png",0],
-    6:["Cold Brew",4.0,"Final_Project/items/coldbrew.png",0],
-    7:["Salted Caramel",4.2,"Final_Project/items/saltedcaramel.png",0],
-    8:["Peppermint Tea",4.0,"Final_Project/items/pepperminttea.png",0],
-    9:["Orange Juice",3.0,"Final_Project/items/orangejuice.png",0],
-    10:["Blue Ocean Soda",4.0,"Final_Project/items/blueoceansoda.png",0] #Honorable mention
+    1:["Espresso",4.2,BASE_DIR / "items/espresso.png",0],
+    2:["Cappucchino",3.3,BASE_DIR / "items/cappucchino.png",0],
+    3:["Latte",4.0,BASE_DIR / "items/latte.png",0],
+    4:["Americano",4.0,BASE_DIR / "items/americano.png",0],
+    5:["Iced Coffee Milk",3.8,BASE_DIR / "items/icedcoffeemilk.png",0],
+    6:["Cold Brew",4.0,BASE_DIR / "items/coldbrew.png",0],
+    7:["Salted Caramel",4.2,BASE_DIR / "items/saltedcaramel.png",0],
+    8:["Peppermint Tea",4.0,BASE_DIR / "items/pepperminttea.png",0],
+    9:["Orange Juice",3.0,BASE_DIR / "items/orangejuice.png",0],
+    10:["Blue Ocean Soda",4.0,BASE_DIR /"items/blueoceansoda.png",0] #Honorable mention
     }
 #=============================================================================================================
 Menu = Box(Main,width="fill",height="fill") #Main Menu
 
-lg = Image.open("Final_Project/TransaprentLogo.png") # Logo hex: #264F10
+lg = Image.open(str(BASE_DIR / 'TransaprentLogo.png')) # Logo hex: #264F10
 if lg.mode == "RGBA":
     lg.convert("RGB")
 resized_logo1 = lg.resize((300,300),resample=Image.Resampling.LANCZOS)
@@ -61,7 +64,7 @@ History.text_color = "#264F10"
 OrderMenu = Box(Main,width="fill",height="fill",layout="grid",visible=False) #Order Menu
 
 lg_box = Box(OrderMenu,layout="grid",align="left",grid=[0,0])
-lg_wordmark = Image.open("Final_Project/TransaprentWordmarkLogo.png")
+lg_wordmark = Image.open(str(BASE_DIR / "TransaprentWordmarkLogo.png"))
 resized_wordmark = lg_wordmark.resize((165,65),resample=Image.Resampling.LANCZOS)
 Order_wordmark = Picture(lg_box,image=resized_wordmark,grid=[0,0]) #Wordmark
 
@@ -121,9 +124,9 @@ def ITEM(itemx,itemy,IID):
         item = Box(OrderMainBox,width=175,height=166,grid=itemgrid)
         item.set_border(1,color="#264F10")
         if IID in [5,7,9]:
-            Picture(item,Items[IID][2],width=120,height=120)
+            Picture(item,str(Items[IID][2]),width=120,height=120)
         else:
-            Picture(item,Items[IID][2],width=140,height=120)
+            Picture(item,str(Items[IID][2]),width=140,height=120)
         item_info = Box(item,layout="grid")
         Text(item_info,text=Items[IID][0],size=10,grid=[0,0])
         Text(item_info,text=f"{Items[IID][1]}$",size=8,grid=[0,1])
@@ -153,21 +156,21 @@ def capture_window(id):
     width = x + Main.tk.winfo_width()
     height = y + Main.tk.winfo_height()
     img = ImageGrab.grab(bbox=(x, y, width, height))
-    img.save(f"Final_Project/receipts/{id}.png")
+    img.save(str(BASE_DIR / f"receipts/{id}.png"))
     print("Saved!")
 
 Receipt_IDs = []
 
 def load_ids():
     Receipt_IDs.clear()
-    if not os.path.exists("Final_Project/ReceiptIDsFile.txt"):
+    if not os.path.exists(str(BASE_DIR /"ReceiptIDsFile.txt")):
         return
-    with open("Final_Project/ReceiptIDsFile.txt", "r") as fil:
+    with open(str(BASE_DIR /"ReceiptIDsFile.txt"), "r") as fil:
         for line in fil:
             Receipt_IDs.append(line.strip())
 def save_ids():
     lines = [f"{i}\n" for i in Receipt_IDs]
-    with open("Final_Project/ReceiptIDsFile.txt","w") as fil:
+    with open(str(BASE_DIR /"ReceiptIDsFile.txt"),"w") as fil:
         fil.writelines(lines)
 
 def generate_id():
@@ -300,7 +303,7 @@ History_txt.font = "Helvetica"
 
 def OpenReceipt():
     if History_ListBox.value:
-        path = f"Final_Project/receipts/{History_ListBox.value}.png"
+        path = str(BASE_DIR / f"receipts/{History_ListBox.value}.png")
         img = Image.open(path)
         img.show()
 
@@ -309,10 +312,10 @@ def clearHistory():
         if yesno("Confirmation","Are you sure? (This action cannot be undone.)"):
             History_ListBox.clear()
             Receipt_IDs.clear()
-            with open("Final_Project/ReceiptIDsFile.txt",mode="w") as fil:
+            with open(str(BASE_DIR / "ReceiptIDsFile.txt"),mode="w") as fil:
                 fil.write("")
-            for f in os.listdir("Final_Project/receipts"):
-                file_path = os.path.join("Final_Project/receipts",f)
+            for f in os.listdir(str(BASE_DIR / "receipts")):
+                file_path = os.path.join(str(BASE_DIR / "receipts"),f)
                 os.remove(file_path)
 
 History_ListBox = ListBox(HistoryMainBox,command=OpenReceipt,width=1000,height=400,scrollbar=True,grid=[0,1,2,1])
